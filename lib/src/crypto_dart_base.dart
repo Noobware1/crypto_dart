@@ -18,6 +18,7 @@ class CryptoDart {
       required int iterations,
       int blockLength = 128,
       int keylength = 16,
+      String? keyEncoding,
       required Uint8List salt,
       required String key}) {
     return PBKDF2(
@@ -26,6 +27,7 @@ class CryptoDart {
             key: key,
             blockLength: blockLength,
             digest: digest,
+            keyEncoding: keyEncoding,
             keylength: keylength)
         .deriveKey();
   }
