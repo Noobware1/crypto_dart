@@ -18,13 +18,18 @@ class AES {
   final cryptoDart = CryptoDart();
   late final _enc = cryptoDart.enc;
 
+  // ignore: constant_identifier_names
   static const _KEY_SIZE = 32; // 256 bits
+  // ignore: constant_identifier_names
   static const _IV_SIZE = 16; // 128 bits
+  // ignore: constant_identifier_names
   static const _SALT_SIZE = 8; // 64
+  // ignore: constant_identifier_names
   static const _KDF_DIGEST = 'MD5';
   // static const _SHA_DIGEST = 'SHA-512';
 
   // Seriously crypto-js, what's wrong with you?
+  // ignore: constant_identifier_names
   static const String _APPEND = "Salted__";
 
   ///  Encrypt using CryptoJS defaults compatible method.
@@ -48,7 +53,9 @@ class AES {
 
     final Uint8List ctbytes = _getPlaintText(plainText, _enc.utf8);
 
+    // ignore: no_leading_underscores_for_local_identifiers
     final Uint8List _key;
+    // ignore: no_leading_underscores_for_local_identifiers
     final Uint8List _iv;
 
     final mode = options?.mode ?? Mode.cbc;
@@ -129,8 +136,11 @@ class AES {
     final mode = options?.mode ?? Mode.cbc;
     final paddingused = options?.padding ?? pad.Padding.pkcs7;
     final padding = _getPadding(paddingused);
+
+    // ignore: no_leading_underscores_for_local_identifiers
     final Uint8List _key;
 
+    // ignore: no_leading_underscores_for_local_identifiers
     final Uint8List _iv;
 
     final Uint8List? saltbytes;
@@ -287,6 +297,8 @@ class AES {
     if (iv is String && encoding != null) {
       return getEncoder(encoding).parse(iv);
     }
+
+    // ignore: no_leading_underscores_for_local_identifiers
     final Uint8List _iv;
     if (iv is List<int>) {
       _iv = Uint8List.fromList(iv);

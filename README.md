@@ -15,8 +15,8 @@ Crypto Dart is made to have crypto-js like usage and results;
 
 ## Features
 
-AES ENCRYPTION 128=192-256
-AES DECRYPTION 128=192-256
+AES ENCRYPTION 128-192-256
+AES DECRYPTION 128-192-256
 
 OPENSSL EVP_BYTESTOKEY 
 
@@ -24,19 +24,33 @@ OPENSSL EVP_BYTESTOKEY
 
 ## Getting started
 
-don't know
+import the package then create a instance of CryptoDart
+
+```dart
+import 'package:crypto_dart/crypto_dart';
+
+final CryptoDart crypto = CryptoDart();
+```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
-
+AES ENCRYPTION
 ```dart
-const like = 'sample';
+final encrypted = crypto.aes.encrypt('Hello, World', 'my secret key');
+
 ```
+
+AES DECRYPTION
+```dart
+final decrypted = crypto.aes.decrypt(encrypted.toString(), 'my secret key');
+
+print(decrypted.convertToString(crypto.enc.utf8));
+
+
+```
+
+
 
 ## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+none for know except that it's work in progress

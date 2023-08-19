@@ -4,5 +4,13 @@
 library;
 
 export 'src/crypto_dart_base.dart';
-
-// TODO: Export any libraries intended for clients of this package.
+export 'src/cipher_options.dart';
+export 'src/cipher_params.dart';
+export 'src/digest_names.dart';
+export 'src/enc.dart';
+export 'src/extenstion.dart';
+export 'src/mode.dart';
+export 'pbkdf2.dart';
+export 'aes.dart';
+export 'encoders.dart';
+export 'padding.dart';
