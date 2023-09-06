@@ -4,7 +4,6 @@ import 'dart:typed_data';
 // import 'package:crypto_dart/crypto_dart.dart';
 import 'package:crypto_dart/src/utils.dart';
 import 'package:pointycastle/export.dart';
-import 'extenstion.dart';
 import 'enc.dart';
 import 'padding/padding.dart' as pad;
 import 'cipher_options.dart';
@@ -144,16 +143,26 @@ class AES {
     // ignore: no_leading_underscores_for_local_identifiers
     final Uint8List _iv;
 
-    final Uint8List? saltbytes;
+    Uint8List? saltbytes;
+    if (options?.salt != null) {
+      if (options!.salt is String) {
+        saltbytes =
+            getEncoder(options?.saltEncoding ?? 'hex').parse(options!.salt);
+      } else {
+        saltbytes = _getSalt(options.salt);
+      }
+    }
+
     if ( // ((ciphertext ?? options?.cipherText) is Uint8List &&
         //       ((ciphertext ?? options?.cipherText) as Uint8List)
         //           .join('')
         //           .startsWith(utf8.encode(_APPEND).join(''))) ||
 
         key is String && options?.keyEncoding == null) {
-      var ctBytes = _enc.base64.parse((ciphertext) as String);
-      saltbytes = ctBytes.sublist(_SALT_SIZE, _IV_SIZE);
-      final cipherTextBytes = ctBytes.sublist(_IV_SIZE);
+      var ctBytes = _enc.base64.parse(ciphertext as String);
+      final cipherTextBytes =
+          saltbytes == null ? ctBytes.sublist(_IV_SIZE) : ctBytes;
+      saltbytes ??= ctBytes.sublist(_SALT_SIZE, _IV_SIZE);
       final keyAndIV = cryptoDart.generateKeyAndIV(
         password: _enc.utf8.parse(key),
         keySize: _KEY_SIZE,
