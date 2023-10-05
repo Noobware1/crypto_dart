@@ -14,3 +14,4 @@ export 'pbkdf2.dart';
 export 'aes.dart';
 export 'encoders.dart';
 export 'padding.dart';
+export 'hashers.dart';
