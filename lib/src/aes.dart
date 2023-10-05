@@ -8,7 +8,7 @@ import 'enc.dart';
 import 'padding/padding.dart' as pad;
 import 'cipher_options.dart';
 import 'cipher_params.dart';
-import 'crypto_dart_base.dart';
+import 'crypto_dart.dart';
 import 'mode.dart';
 import 'padding/zero_padding.dart';
 
@@ -147,7 +147,7 @@ class AES {
     if (options?.salt != null) {
       if (options!.salt is String) {
         saltbytes =
-            getEncoder(options?.saltEncoding ?? 'hex').parse(options!.salt);
+            getEncoder(options.saltEncoding ?? 'hex').parse(options.salt);
       } else {
         saltbytes = _getSalt(options.salt);
       }
