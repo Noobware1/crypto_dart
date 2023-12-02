@@ -9,7 +9,7 @@ abstract class Hasher {
   String get algo;
 
   Hasher(dynamic data) {
-    _init(data);
+    init(data);
   }
 
   @override
@@ -17,7 +17,7 @@ abstract class Hasher {
     return Encoders().hex.stringify(bytes);
   }
 
-  _init(dynamic data) {
+  void init(dynamic data) {
     if (data is String) {
       data = Encoders().utf8.parse(data);
     } else if (data is List<int>) {
@@ -27,7 +27,13 @@ abstract class Hasher {
       throw ArgumentError.value(
           data, 'HashHelper', 'excepted a String or Uint8List');
     } else {
-      _bytes = Digest(algo).process(data);
+     
+  
+      final digest = Digest(algo);
+
+      _bytes = digest.process(data);
     }
   }
+
+  int get blockSize => 512 ~/ 32;
 }

@@ -1,18 +1,21 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:typed_data';
 
-import 'package:crypto_dart/crypto_dart.dart';
 
-import 'aes.dart';
+import 'package:crypto_dart/src/hash_algorithms.dart';
+
+import 'aes.dart' as aes;
 import 'encoders.dart';
 import 'generate_key_and_iv.dart' as key_and_iv_gen;
-import 'pbkdf2.dart';
+import 'pbkdf2.dart' as pbkdf2;
 
 class CryptoDart {
-  Encoders get enc => Encoders();
+  static Encoders enc = Encoders();
 
-  AES get aes => AES();
+  static aes.AES AES = aes.AES();
 
-  Uint8List pbkdf2(
+  Uint8List PBKDF2(
       {String digest = HashAlgorithms.SHA1,
       required int iterations,
       int blockLength = 128,
@@ -20,7 +23,8 @@ class CryptoDart {
       String? keyEncoding,
       required Uint8List salt,
       required String key}) {
-    return PBKDF2(
+    return pbkdf2
+        .PBKDF2(
             iterations: iterations,
             salt: salt,
             key: key,
@@ -31,7 +35,7 @@ class CryptoDart {
         .deriveKey();
   }
 
-  List<Uint8List> generateKeyAndIV({
+  static List<Uint8List> generateKeyAndIV({
     required Uint8List password,
     required int keySize,
     required int ivSize,

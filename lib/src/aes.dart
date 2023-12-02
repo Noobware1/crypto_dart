@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 // import 'package:crypto_dart/crypto_dart.dart';
+import 'package:crypto_dart/src/helpers/array_copy.dart';
 import 'package:crypto_dart/src/utils.dart';
 import 'package:pointycastle/export.dart';
 import 'enc.dart';
@@ -15,8 +16,7 @@ import 'padding/zero_padding.dart';
 //Mostly is copied from https://github.com/aniyomiorg/aniyomi-extensions/blob/master/lib/cryptoaes/src/main/java/eu/kanade/tachiyomi/lib/cryptoaes/CryptoAES.kt
 
 class AES {
-  final cryptoDart = CryptoDart();
-  late final _enc = cryptoDart.enc;
+   final _enc = CryptoDart.enc;
 
   // ignore: constant_identifier_names
   static const _KEY_SIZE = 32; // 256 bits
@@ -59,12 +59,12 @@ class AES {
     final Uint8List _iv;
 
     final mode = options?.mode ?? Mode.cbc;
-    final paddingUsed = options?.padding ?? pad.Padding.pkcs7;
+    final paddingUsed = options?.padding ?? pad.Padding.PKCS7;
     final padding = _getPadding(paddingUsed);
     final Uint8List? salt;
     if (key is String && options?.keyEncoding == null) {
       salt = _getSalt(options?.salt ?? _generateSalt(_SALT_SIZE));
-      final keyAndIV = cryptoDart.generateKeyAndIV(
+      final keyAndIV = CryptoDart.generateKeyAndIV(
         password: _enc.utf8.parse(key),
         keySize: _KEY_SIZE,
         ivSize: _IV_SIZE,
@@ -134,7 +134,7 @@ class AES {
     areParamsVaild(ciphertext, key, iv: iv, options: options);
     final Uint8List decrypted;
     final mode = options?.mode ?? Mode.cbc;
-    final paddingused = options?.padding ?? pad.Padding.pkcs7;
+    final paddingused = options?.padding ?? pad.Padding.PKCS7;
     final padding = _getPadding(paddingused);
 
     // ignore: no_leading_underscores_for_local_identifiers
@@ -163,7 +163,7 @@ class AES {
       final cipherTextBytes =
           saltbytes == null ? ctBytes.sublist(_IV_SIZE) : ctBytes;
       saltbytes ??= ctBytes.sublist(_SALT_SIZE, _IV_SIZE);
-      final keyAndIV = cryptoDart.generateKeyAndIV(
+      final keyAndIV = CryptoDart.generateKeyAndIV(
         password: _enc.utf8.parse(key),
         keySize: _KEY_SIZE,
         ivSize: _IV_SIZE,
@@ -240,54 +240,15 @@ class AES {
 
   Padding _getPadding(pad.Padding padding) {
     switch (padding) {
-      case pad.Padding.nopadding:
+      case pad.Padding.ZEROPADDING:
         return ZeroPadding();
-      case pad.Padding.pkc5:
+      case pad.Padding.PKCS7:
         return PKCS7Padding();
       default:
         return PKCS7Padding();
     }
   }
 
-  static Uint8List _runAes(
-      {required Uint8List key,
-      required Uint8List iv,
-      required Uint8List plaintext,
-      required Mode mode,
-      required bool forEncryption,
-      required Padding padding}) {
-    final BlockCipher cipher;
-    final BlockCipher underlyingchiper;
-    if (mode == Mode.cbc) {
-      underlyingchiper = BlockCipher('AES/CBC');
-    } else if (mode == Mode.ecb) {
-      underlyingchiper =
-          BlockCipher('AES/EBC'); // ..init(true, KeyParameter(key));
-    } else {
-      throw ArgumentError('Invaild Mode $mode');
-    }
-
-    cipher = PaddedBlockCipherImpl(padding, underlyingchiper);
-
-    ParametersWithIV<KeyParameter> params =
-        ParametersWithIV<KeyParameter>(KeyParameter(key), iv);
-    PaddedBlockCipherParameters<ParametersWithIV<KeyParameter>, KeyParameter>
-        paddingParams = PaddedBlockCipherParameters<
-            ParametersWithIV<KeyParameter>, KeyParameter>(params, null);
-
-    cipher.init(forEncryption, paddingParams);
-
-    return cipher.process(plaintext);
-  }
-
-  void areParamsVaild<A, B, C>(C? cipherText, A? key,
-      {B? iv, CipherOptions? options}) {
-    assert(cipherText != null && key != null);
-
-    if (iv != null && options?.iv != null) {
-      throw ArgumentError('IV is defined two times');
-    }
-  }
 
   Uint8List _getKey<T>(T key, [String? encoding]) {
     if (key is String && encoding != null) {
@@ -363,10 +324,47 @@ class AES {
         'Excepted a String or List<int> or Uint8List but recevied $element');
   }
 
-  void arrayCopy(Uint8List source, int srcPos, List<int> destination,
-      int destPos, int length) {
-    for (var i = 0; i < length; i++) {
-      destination[destPos + i] = source[srcPos + i];
+
+
+
+
+  static Uint8List _runAes(
+      {required Uint8List key,
+      required Uint8List iv,
+      required Uint8List plaintext,
+      required Mode mode,
+      required bool forEncryption,
+      required Padding padding}) {
+    final BlockCipher cipher;
+    final BlockCipher underlyingchiper;
+    if (mode == Mode.cbc) {
+      underlyingchiper = BlockCipher('AES/CBC');
+    } else if (mode == Mode.ecb) {
+      underlyingchiper =
+          BlockCipher('AES/EBC'); // ..init(true, KeyParameter(key));
+    } else {
+      throw ArgumentError('Invaild Mode $mode');
+    }
+
+    cipher = PaddedBlockCipherImpl(padding, underlyingchiper);
+
+    ParametersWithIV<KeyParameter> params =
+        ParametersWithIV<KeyParameter>(KeyParameter(key), iv);
+    PaddedBlockCipherParameters<ParametersWithIV<KeyParameter>, KeyParameter>
+        paddingParams = PaddedBlockCipherParameters<
+            ParametersWithIV<KeyParameter>, KeyParameter>(params, null);
+
+    cipher.init(forEncryption, paddingParams);
+
+    return cipher.process(plaintext);
+  }
+
+  void areParamsVaild<A, B, C>(C? cipherText, A? key,
+      {B? iv, CipherOptions? options}) {
+    assert(cipherText != null && key != null);
+
+    if (iv != null && options?.iv != null) {
+      throw ArgumentError('IV is defined two times');
     }
   }
 }

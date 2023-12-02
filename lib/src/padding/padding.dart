@@ -1,5 +1,7 @@
+// ignore_for_file: constant_identifier_names
+
 enum Padding {
-  pkcs7,
-  pkc5,
-  nopadding,
+  PKCS7,
+  PKCS5,
+  ZEROPADDING,
 }
