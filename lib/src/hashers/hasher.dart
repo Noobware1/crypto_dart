@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:crypto_dart/crypto_dart.dart';
 import 'package:crypto_dart/src/encoders.dart';
 import 'package:pointycastle/export.dart';
 

@@ -6,6 +6,7 @@ export 'src/hashers/ripemd160.dart';
 export 'src/hashers/sha1.dart';
 export 'src/hashers/sha3.dart';
 export 'src/hashers/sha224.dart';
+export 'src/hashers/sha256.dart';
 export 'src/hashers/sha384.dart';
 export 'src/hashers/sha512.dart';
 export 'src/hashers/tiger.dart';

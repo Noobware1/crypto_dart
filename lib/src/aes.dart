@@ -42,9 +42,12 @@ class AES extends block_cipher.BlockCipher {
   ///  @param iv
   ///  are all in bytes format
 
+  @override
   CipherParams encrypt<Text, Key>(Text? plainText, Key? key,
       {CipherOptions? options}) {
-    areParamsVaild(plainText, key, iv: options?.iv, options: options);
+    assert(plainText != null && key != null);
+
+    areParamsVaild(plainText, key, options: options);
 
     final Uint8List encrypted;
 
@@ -126,9 +129,10 @@ class AES extends block_cipher.BlockCipher {
   ///  @param iv
   ///  are all in bytes format
 
+  @override
   Uint8List decrypt<Text, Key>(Text? ciphertext, Key? key,
       {CipherOptions? options}) {
-    areParamsVaild(ciphertext, key, iv: options?.iv, options: options);
+    areParamsVaild(ciphertext, key, options: options);
     final Uint8List decrypted;
     final mode = options?.mode ?? Mode.cbc;
     final paddingused = options?.padding ?? pad.Padding.PKCS7;
@@ -349,14 +353,5 @@ class AES extends block_cipher.BlockCipher {
     cipher.init(forEncryption, paddingParams);
 
     return cipher.process(plaintext);
-  }
-
-  void areParamsVaild<A, B, C>(C? cipherText, A? key,
-      {B? iv, CipherOptions? options}) {
-    assert(cipherText != null && key != null);
-
-    if (iv != null && options?.iv != null) {
-      throw ArgumentError('IV is defined two times');
-    }
   }
 }
