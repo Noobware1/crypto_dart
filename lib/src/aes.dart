@@ -1,7 +1,9 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:math';
 import 'dart:typed_data';
 
-// import 'package:crypto_dart/crypto_dart.dart';
+import 'package:crypto_dart/src/block_cipher.dart' as block_cipher;
 import 'package:crypto_dart/src/helpers/array_copy.dart';
 import 'package:crypto_dart/src/utils.dart';
 import 'package:pointycastle/export.dart';
@@ -15,21 +17,16 @@ import 'padding/zero_padding.dart';
 
 //Mostly is copied from https://github.com/aniyomiorg/aniyomi-extensions/blob/master/lib/cryptoaes/src/main/java/eu/kanade/tachiyomi/lib/cryptoaes/CryptoAES.kt
 
-class AES {
-   final _enc = CryptoDart.enc;
+class AES extends block_cipher.BlockCipher {
+  final _enc = CryptoDart.enc;
 
-  // ignore: constant_identifier_names
   static const _KEY_SIZE = 32; // 256 bits
-  // ignore: constant_identifier_names
   static const _IV_SIZE = 16; // 128 bits
-  // ignore: constant_identifier_names
   static const _SALT_SIZE = 8; // 64
-  // ignore: constant_identifier_names
   static const _KDF_DIGEST = 'MD5';
   // static const _SHA_DIGEST = 'SHA-512';
 
   // Seriously crypto-js, what's wrong with you?
-  // ignore: constant_identifier_names
   static const String _APPEND = "Salted__";
 
   ///  Encrypt using CryptoJS defaults compatible method.
@@ -45,13 +42,13 @@ class AES {
   ///  @param iv
   ///  are all in bytes format
 
-  CipherParams encrypt<A, B, C>(C? plainText, A? key,
-      {B? iv, CipherOptions? options}) {
-    areParamsVaild(plainText, key, iv: iv, options: options);
+  CipherParams encrypt<Text, Key>(Text? plainText, Key? key,
+      {CipherOptions? options}) {
+    areParamsVaild(plainText, key, iv: options?.iv, options: options);
 
     final Uint8List encrypted;
 
-    final Uint8List ctbytes = _getPlaintText(plainText, _enc.utf8);
+    final Uint8List ctbytes = _getPlaintText(plainText, _enc.UTF8);
 
     // ignore: no_leading_underscores_for_local_identifiers
     final Uint8List _key;
@@ -64,12 +61,12 @@ class AES {
     final Uint8List? salt;
     if (key is String && options?.keyEncoding == null) {
       salt = _getSalt(options?.salt ?? _generateSalt(_SALT_SIZE));
-      final keyAndIV = CryptoDart.generateKeyAndIV(
-        password: _enc.utf8.parse(key),
+      final keyAndIV = CryptoDart.EvpKDF(
+        password: _enc.UTF8.parse(key),
         keySize: _KEY_SIZE,
         ivSize: _IV_SIZE,
         salt: salt,
-        hashAlgorithm: _KDF_DIGEST,
+        hasher: _KDF_DIGEST,
         iterations: 1,
       );
 
@@ -84,7 +81,7 @@ class AES {
           mode: mode,
           padding: padding);
 
-      var sbytes = _enc.utf8.parse(_APPEND);
+      var sbytes = _enc.UTF8.parse(_APPEND);
       var b = Uint8List(_IV_SIZE + cipherText.length);
 
       arrayCopy(sbytes, 0, b, 0, sbytes.length);
@@ -95,7 +92,7 @@ class AES {
     } else {
       _key = _getKey(key, options?.keyEncoding);
 
-      _iv = _getIV(iv ?? options?.iv, options?.ivEncoding);
+      _iv = _getIV(options?.iv, options?.ivEncoding);
       salt = null;
       encrypted = _runAes(
           forEncryption: true,
@@ -129,9 +126,9 @@ class AES {
   ///  @param iv
   ///  are all in bytes format
 
-  Uint8List decrypt<A, B, C>(C? ciphertext, A? key,
-      {B? iv, CipherOptions? options}) {
-    areParamsVaild(ciphertext, key, iv: iv, options: options);
+  Uint8List decrypt<Text, Key>(Text? ciphertext, Key? key,
+      {CipherOptions? options}) {
+    areParamsVaild(ciphertext, key, iv: options?.iv, options: options);
     final Uint8List decrypted;
     final mode = options?.mode ?? Mode.cbc;
     final paddingused = options?.padding ?? pad.Padding.PKCS7;
@@ -159,15 +156,15 @@ class AES {
         //           .startsWith(utf8.encode(_APPEND).join(''))) ||
 
         key is String && options?.keyEncoding == null) {
-      var ctBytes = _enc.base64.parse(ciphertext as String);
+      var ctBytes = _enc.BASE64.parse(ciphertext as String);
       final cipherTextBytes =
           saltbytes == null ? ctBytes.sublist(_IV_SIZE) : ctBytes;
       saltbytes ??= ctBytes.sublist(_SALT_SIZE, _IV_SIZE);
-      final keyAndIV = CryptoDart.generateKeyAndIV(
-        password: _enc.utf8.parse(key),
+      final keyAndIV = CryptoDart.EvpKDF(
+        password: _enc.UTF8.parse(key),
         keySize: _KEY_SIZE,
         ivSize: _IV_SIZE,
-        hashAlgorithm: _KDF_DIGEST,
+        hasher: _KDF_DIGEST,
         salt: saltbytes,
         iterations: 1,
       );
@@ -181,7 +178,7 @@ class AES {
           forEncryption: false,
           padding: padding);
     } else {
-      _iv = _getIV(iv ?? options?.iv, options?.ivEncoding);
+      _iv = _getIV(options?.iv, options?.ivEncoding);
       _key = _getKey(key, options?.keyEncoding);
       saltbytes = null;
       decrypted = _runAes(
@@ -249,7 +246,6 @@ class AES {
     }
   }
 
-
   Uint8List _getKey<T>(T key, [String? encoding]) {
     if (key is String && encoding != null) {
       return getEncoder(encoding).parse(key);
@@ -274,7 +270,7 @@ class AES {
     if (iv is List<int>) {
       _iv = Uint8List.fromList(iv);
     } else if (iv is String) {
-      _iv = _enc.utf8.parse(iv);
+      _iv = _enc.UTF8.parse(iv);
     } else if (iv is Uint8List) {
       _iv = iv;
     } else {
@@ -308,9 +304,9 @@ class AES {
   Uint8List _decodeString(String str, String encoding) {
     try {
       if (encoding == 'base64') {
-        return _enc.base64.parse(str);
+        return _enc.BASE64.parse(str);
       } else if (encoding == 'hex') {
-        return _enc.base64.parse(str);
+        return _enc.BASE64.parse(str);
       } else {
         throw ArgumentError();
       }
@@ -323,10 +319,6 @@ class AES {
     return ArgumentError(
         'Excepted a String or List<int> or Uint8List but recevied $element');
   }
-
-
-
-
 
   static Uint8List _runAes(
       {required Uint8List key,

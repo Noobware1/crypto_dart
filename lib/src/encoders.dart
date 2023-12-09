@@ -4,8 +4,8 @@ import 'encoders/utf16.dart';
 import 'encoders/utf8.dart';
 
 class Encoders {
-  Base64 get base64 => Base64();
-  Hex get hex => Hex();
-  Utf8 get utf8 => Utf8();
-  Utf16 get utf16 => Utf16();
+  Base64 get BASE64 => Base64();
+  Hex get HEX => Hex();
+  Utf8 get UTF8 => Utf8();
+  Utf16 get UTF16 => Utf16();
 }

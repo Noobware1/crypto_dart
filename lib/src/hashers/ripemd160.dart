@@ -1,4 +1,5 @@
-import 'package:crypto_dart/crypto_dart.dart';
+import 'package:crypto_dart/hashers.dart';
+import 'package:crypto_dart/src/hash_algorithms.dart';
 
 class RIPEMD160 extends Hasher {
   RIPEMD160(super.data);
@@ -6,4 +7,3 @@ class RIPEMD160 extends Hasher {
   @override
   String get algo => HashAlgorithms.RIPEMD160;
 }
-

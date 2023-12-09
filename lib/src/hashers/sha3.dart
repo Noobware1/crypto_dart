@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:crypto_dart/crypto_dart.dart';
+import 'package:crypto_dart/hashers.dart';
+import 'package:crypto_dart/src/encoders.dart';
 import 'package:pointycastle/export.dart';
 
 class SHA3 extends Hasher {
@@ -15,7 +17,7 @@ class SHA3 extends Hasher {
   @override
   void init(dynamic data) {
     if (data is String) {
-      data = Encoders().utf8.parse(data);
+      data = Encoders().UTF8.parse(data);
     } else if (data is List<int>) {
       data = Uint8List.fromList(data);
     }

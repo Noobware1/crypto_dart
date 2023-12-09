@@ -1,10 +1,11 @@
 import 'dart:typed_data';
 
 import 'package:crypto_dart/crypto_dart.dart';
+import 'package:crypto_dart/src/encoders.dart';
 import 'package:pointycastle/export.dart';
 
 abstract class Hasher {
-  late final Uint8List _bytes;
+  late Uint8List _bytes;
   Uint8List get bytes => _bytes;
   String get algo;
 
@@ -14,12 +15,12 @@ abstract class Hasher {
 
   @override
   String toString() {
-    return Encoders().hex.stringify(bytes);
+    return Encoders().HEX.stringify(bytes);
   }
 
   void init(dynamic data) {
     if (data is String) {
-      data = Encoders().utf8.parse(data);
+      data = Encoders().UTF8.parse(data);
     } else if (data is List<int>) {
       data = Uint8List.fromList(data);
     }
@@ -27,8 +28,6 @@ abstract class Hasher {
       throw ArgumentError.value(
           data, 'HashHelper', 'excepted a String or Uint8List');
     } else {
-     
-  
       final digest = Digest(algo);
 
       _bytes = digest.process(data);
