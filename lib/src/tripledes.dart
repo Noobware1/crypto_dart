@@ -42,7 +42,7 @@ class TripleDES extends cipher.BlockCipher {
       {CipherOptions? options}) {
     areParamsVaild(ciphertext, key, options: options);
     final Uint8List decrypted;
-    final mode = options?.mode ?? Mode.cbc;
+    final mode = options?.mode ?? Mode.CBC;
     final paddingused = options?.padding ?? pad.Padding.PKCS7;
     final padding = _getPadding(paddingused);
 
@@ -116,7 +116,7 @@ class TripleDES extends cipher.BlockCipher {
 
     final Uint8List _iv;
 
-    final mode = options?.mode ?? Mode.cbc;
+    final mode = options?.mode ?? Mode.CBC;
     final paddingUsed = options?.padding ?? pad.Padding.PKCS7;
     final padding = _getPadding(paddingUsed);
     final Uint8List? salt;
@@ -329,9 +329,9 @@ class TripleDES extends cipher.BlockCipher {
       required Padding padding}) {
     final BlockCipher cipher;
     final BlockCipher underlyingchiper;
-    if (mode == Mode.cbc) {
+    if (mode == Mode.CBC) {
       underlyingchiper = BlockCipher('DESede');
-    } else if (mode == Mode.ecb) {
+    } else if (mode == Mode.ECB) {
       underlyingchiper = BlockCipher('DESede');
     } else {
       throw ArgumentError('Invaild Mode $mode');

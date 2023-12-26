@@ -1,4 +1,3 @@
-enum Mode {
-cbc,
-ecb
-}
+// ignore_for_file: constant_identifier_names
+
+enum Mode { CBC, ECB }

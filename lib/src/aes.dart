@@ -58,7 +58,7 @@ class AES extends block_cipher.BlockCipher {
     // ignore: no_leading_underscores_for_local_identifiers
     final Uint8List _iv;
 
-    final mode = options?.mode ?? Mode.cbc;
+    final mode = options?.mode ?? Mode.CBC;
     final paddingUsed = options?.padding ?? pad.Padding.PKCS7;
     final padding = _getPadding(paddingUsed);
     final Uint8List? salt;
@@ -134,7 +134,7 @@ class AES extends block_cipher.BlockCipher {
       {CipherOptions? options}) {
     areParamsVaild(ciphertext, key, options: options);
     final Uint8List decrypted;
-    final mode = options?.mode ?? Mode.cbc;
+    final mode = options?.mode ?? Mode.CBC;
     final paddingused = options?.padding ?? pad.Padding.PKCS7;
     final padding = _getPadding(paddingused);
 
@@ -333,9 +333,9 @@ class AES extends block_cipher.BlockCipher {
       required Padding padding}) {
     final BlockCipher cipher;
     final BlockCipher underlyingchiper;
-    if (mode == Mode.cbc) {
+    if (mode == Mode.CBC) {
       underlyingchiper = BlockCipher('AES/CBC');
-    } else if (mode == Mode.ecb) {
+    } else if (mode == Mode.ECB) {
       underlyingchiper =
           BlockCipher('AES/EBC'); // ..init(true, KeyParameter(key));
     } else {
