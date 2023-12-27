@@ -5,10 +5,10 @@ import 'package:crypto_dart/src/padding/padding.dart';
 import 'enc.dart';
 import 'mode.dart';
 
-class CipherOptions<A, B, C, D, E> {
-  final B? iv;
+class CipherOptions {
+  final dynamic iv;
   final Padding? padding;
-  final E? salt;
+  final dynamic salt;
   final String? textEncoding;
   final String? ivEncoding;
   final String? keyEncoding;
