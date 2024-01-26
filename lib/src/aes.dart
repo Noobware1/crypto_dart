@@ -1,8 +1,9 @@
-// ignore_for_file: constant_identifier_names
+// ignore_for_file: constant_identifier_names, no_leading_underscores_for_local_identifiers
 
 import 'dart:math';
 import 'dart:typed_data';
 
+// import 'package:crypto_dart/crypto_dart.dart';
 import 'package:crypto_dart/src/block_cipher.dart' as block_cipher;
 import 'package:crypto_dart/src/helpers/array_copy.dart';
 import 'package:crypto_dart/src/utils.dart';
@@ -53,9 +54,7 @@ class AES extends block_cipher.BlockCipher {
 
     final Uint8List ctbytes = _getPlaintText(plainText, _enc.UTF8);
 
-    // ignore: no_leading_underscores_for_local_identifiers
     final Uint8List _key;
-    // ignore: no_leading_underscores_for_local_identifiers
     final Uint8List _iv;
 
     final mode = options?.mode ?? Mode.CBC;
