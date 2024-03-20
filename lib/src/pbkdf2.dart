@@ -9,10 +9,11 @@ Uint8List PBKDF2(
     int keySize = 4,
     required Uint8List salt,
     String keyEncoding = 'utf8',
+    required int blockLength,
     required String key}) {
   final digest = Digest(hasher);
 
-  final pbkdf2 = PBKDF2KeyDerivator(HMac(digest, keySize * digest.digestSize));
+  final pbkdf2 = PBKDF2KeyDerivator(HMac(digest, blockLength));
 
   pbkdf2.init(Pbkdf2Parameters(salt, iterations, keySize * 8));
 
