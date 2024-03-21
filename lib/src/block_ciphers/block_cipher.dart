@@ -13,10 +13,4 @@ abstract class BlockCipher {
   /// The method is generic and can work with any type of data for the cipher text, key, and iv.
   Uint8List decrypt<Text, Key>(Text? ciphertext, Key? key,
       {CipherOptions? options});
-
-  /// The `areParamsVaild` method is a helper method that checks if the parameters passed to the `encrypt` and `decrypt` methods are valid.
-  void areParamsVaild<A, B, C>(C? cipherText, A? key,
-      {CipherOptions? options}) {
-    assert(cipherText != null && key != null);
-  }
 }

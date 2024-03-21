@@ -24,7 +24,6 @@ class AES extends block_cipher.BlockCipher {
   CipherParams encrypt<Text, Key>(Text? plainText, Key? key,
       {CipherOptions? options}) {
     assert(plainText != null && key != null);
-
     areParamsVaild(plainText, key, options: options);
 
     final Uint8List encrypted;
@@ -116,7 +115,9 @@ class AES extends block_cipher.BlockCipher {
     }
 
     if (key is String && options?.keyEncoding == null) {
-      var ctBytes = enc.Base64.parse(ciphertext as String);
+      var ctBytes = ciphertext is CipherParams
+          ? ciphertext.cipherText
+          : enc.Base64.parse(ciphertext as String);
       final cipherTextBytes =
           saltbytes == null ? ctBytes.sublist(_IV_SIZE) : ctBytes;
       saltbytes ??= ctBytes.sublist(_SALT_SIZE, _IV_SIZE);

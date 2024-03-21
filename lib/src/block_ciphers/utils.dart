@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:crypto_dart/src/cipher_options.dart';
+import 'package:crypto_dart/src/cipher_params.dart';
 import 'package:crypto_dart/src/crypto_dart.dart';
 import 'package:crypto_dart/src/enc.dart';
 import 'package:crypto_dart/src/encoders.dart';
@@ -12,6 +14,12 @@ import 'package:pointycastle/export.dart' as pointycastle;
 
 extension BlockCipherUtils on BlockCipher {
   Encoders get enc => CryptoDart.enc;
+
+  /// The `areParamsVaild` method is a helper method that checks if the parameters passed to the `encrypt` and `decrypt` methods are valid.
+  void areParamsVaild<A, B, C>(C? cipherText, A? key,
+      {CipherOptions? options}) {
+    assert(cipherText != null && key != null);
+  }
 
   Uint8List getSalt<T>(T salt, int length) {
     Uint8List checkLen(Uint8List bytes) {
@@ -108,7 +116,9 @@ extension BlockCipherUtils on BlockCipher {
   }
 
   Uint8List getCipherText<Text>(Text cipherText, [String? encoding]) {
-    if (cipherText is List<int>) {
+    if (cipherText is CipherParams) {
+      return cipherText.cipherText;
+    } else if (cipherText is List<int>) {
       return Uint8List.fromList(cipherText);
     } else if (cipherText is Uint8List) {
       return cipherText;

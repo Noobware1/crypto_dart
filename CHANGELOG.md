@@ -11,5 +11,11 @@
 - changed encoders names.
 - refactor some code.
 
+## 1.0.3+1
+
+- updated README.md
+- remove areParamsVaild from BlocCipher
+- make BlockCipher decrypt method accept CipherParams as input
+
 
 
