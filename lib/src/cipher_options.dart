@@ -1,8 +1,4 @@
-import 'dart:convert';
-
 import 'package:crypto_dart/src/padding/padding.dart';
-
-import 'enc.dart';
 import 'mode.dart';
 
 class CipherOptions {
@@ -27,16 +23,7 @@ class CipherOptions {
   });
 
   @override
-  String toString([Encoder? encoder]) {
-    return json.encode({
-      'iv': iv,
-      'padding': padding,
-      'salt': salt,
-      'saltEncoding': saltEncoding,
-      'textEncoding': textEncoding,
-      'mode': mode,
-      'ivEncoding': ivEncoding,
-      'keyEncoding': keyEncoding,
-    });
+  String toString() {
+    return 'CipherOptions(iv: $iv, padding: $padding, salt: $salt, saltEncoding: $saltEncoding, textEncoding: $textEncoding, mode: $mode, ivEncoding: $ivEncoding, keyEncoding: $keyEncoding)';
   }
 }

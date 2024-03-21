@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-
 import 'enc.dart';
 import 'encoders/base64.dart';
 import 'mode.dart';
@@ -25,6 +24,6 @@ class CipherParams {
 
   @override
   String toString([Encoder? encoder]) {
-    return (encoder ?? Base64()).stringify(cipherText);
+    return (encoder ?? BASE64()).stringify(cipherText);
   }
 }

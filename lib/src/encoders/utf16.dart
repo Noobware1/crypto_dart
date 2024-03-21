@@ -2,7 +2,8 @@ import 'dart:typed_data';
 
 import 'package:crypto_dart/src/enc.dart';
 
-class Utf16 extends Encoder {
+class UTF16 implements Encoder {
+  const UTF16();
   @override
   Uint8List parse(String encoded) => Uint8List.fromList(encoded.codeUnits);
 

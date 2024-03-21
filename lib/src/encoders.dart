@@ -1,11 +1,12 @@
-import 'encoders/base64.dart';
-import 'encoders/hex.dart';
-import 'encoders/utf16.dart';
-import 'encoders/utf8.dart';
+import 'encoders/base64.dart' as base64;
+import 'encoders/hex.dart' as hex;
+import 'encoders/utf16.dart' as utf16;
+import 'encoders/utf8.dart' as utf8;
 
 class Encoders {
-  Base64 get BASE64 => Base64();
-  Hex get HEX => Hex();
-  Utf8 get UTF8 => Utf8();
-  Utf16 get UTF16 => Utf16();
+  base64.BASE64 get BASE64 => base64.BASE64();
+
+  hex.HEX get HEX => hex.HEX();
+  utf8.UTF8 get UTF8 => utf8.UTF8();
+  utf16.UTF16 get UTF16 => utf16.UTF16();
 }

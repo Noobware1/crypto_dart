@@ -1,1 +1,1 @@
-export 'src/tripledes.dart';
+export 'src/block_ciphers/tripledes.dart';

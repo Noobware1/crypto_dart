@@ -3,8 +3,9 @@ import 'dart:typed_data';
 
 import 'package:crypto_dart/src/enc.dart';
 
+class BASE64 implements Encoder {
+  const BASE64();
 
-class Base64 extends Encoder {
   @override
   Uint8List parse(String encoded) => base64Decode(encoded);
 

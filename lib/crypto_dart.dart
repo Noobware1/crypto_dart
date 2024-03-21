@@ -12,4 +12,4 @@ export 'src/extenstion.dart';
 export 'src/mode.dart';
 export 'src/padding/padding.dart';
 export 'src/padding/zero_padding.dart';
-export 'src/block_cipher.dart';
+export 'src/block_ciphers/block_cipher.dart';

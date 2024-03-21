@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-
 import 'package:crypto_dart/src/enc.dart';
 
+class UTF8 implements Encoder {
+  const UTF8();
 
-class Utf8 extends Encoder {
   @override
   Uint8List parse(String encoded) => Uint8List.fromList(utf8.encode(encoded));
 

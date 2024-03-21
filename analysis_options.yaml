@@ -15,10 +15,11 @@ include: package:lints/recommended.yaml
 
 # Uncomment the following section to specify additional rules.
 
-# linter:
-#   rules:
-#     - camel_case_types
-
+linter:
+  rules:
+    constant_identifier_names: false
+    non_constant_identifier_names: false
+    no_leading_underscores_for_local_identifiers: false
 # analyzer:
 #   exclude:
 #     - path/to/excluded/files/**
