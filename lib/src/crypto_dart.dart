@@ -71,6 +71,7 @@ class CryptoDart {
         key: key,
         hasher: hasher,
         keyEncoding: keyEncoding,
+        blockLength: blockLength,
         keySize: keySize);
   }
 
