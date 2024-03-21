@@ -1,7 +1,4 @@
-/// Support for doing something awesome.
-///
-/// More dartdocs go here.
-library;
+library crypto_dart; 
 
 export 'src/crypto_dart.dart';
 export 'src/cipher_options.dart';

@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:crypto_dart/src/encoders.dart';
+import 'package:crypto_dart/src/encoders/utf8.dart';
 import 'package:pointycastle/export.dart';
 
 abstract class Hasher {
@@ -14,12 +15,12 @@ abstract class Hasher {
 
   @override
   String toString() {
-    return Encoders().HEX.stringify(bytes);
+    return Encoders().Hex.stringify(bytes);
   }
 
   void init(dynamic data) {
     if (data is String) {
-      data = Encoders().UTF8.parse(data);
+      data = UTF8().parse(data);
     } else if (data is List<int>) {
       data = Uint8List.fromList(data);
     }

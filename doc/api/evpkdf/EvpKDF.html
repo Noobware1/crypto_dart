@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the EvpKDF function from the evpkdf library, for the Dart programming language.">
+  <title>EvpKDF function - evpkdf library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">crypto_dart</a></li>
+    <li><a href="../evpkdf/evpkdf-library.html">evpkdf.dart</a></li>
+    <li class="self-crumb">EvpKDF function</li>
+  </ol>
+  <div class="self-name">EvpKDF</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        brightness_4
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        brightness_5
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+  <div
+      id="dartdoc-main-content"
+      class="main-content"
+      data-above-sidebar="evpkdf&#47;evpkdf-library-sidebar.html"
+      data-below-sidebar="">
+      <div>
+<h1><span class="kind-function">EvpKDF</span> function 
+ 
+</h1></div>
+
+    <section class="multi-line-signature">
+        
+
+<span class="returntype"><a href="../evpkdf/EvpKDFResult-class.html">EvpKDFResult</a></span>
+<span class="name ">EvpKDF</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="EvpKDF-param-password">{<span>required</span> <span class="type-annotation">dynamic</span> <span class="parameter-name">password</span>, </span></li>
+<li><span class="parameter" id="EvpKDF-param-salt"><span>required</span> <span class="type-annotation"><a href="https://api.dart.dev/stable/3.3.0/dart-typed_data/Uint8List-class.html">Uint8List</a></span> <span class="parameter-name">salt</span>, </span></li>
+<li><span class="parameter" id="EvpKDF-param-keySize"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.3.0/dart-core/int-class.html">int</a></span> <span class="parameter-name">keySize</span> = <span class="default-value">4</span>, </span></li>
+<li><span class="parameter" id="EvpKDF-param-ivSize"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.3.0/dart-core/int-class.html">int</a></span> <span class="parameter-name">ivSize</span> = <span class="default-value">0</span>, </span></li>
+<li><span class="parameter" id="EvpKDF-param-iterations"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.3.0/dart-core/int-class.html">int</a></span> <span class="parameter-name">iterations</span> = <span class="default-value">1</span>, </span></li>
+<li><span class="parameter" id="EvpKDF-param-hasher"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.3.0/dart-core/String-class.html">String</a></span> <span class="parameter-name">hasher</span> = <span class="default-value">&#39;MD5&#39;</span>}</span></li>
+</ol>)
+
+        
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Generates a key and an initialization vector (IV) with the given salt and password.</p>
+<p><a href="https://stackoverflow.com/a/41434590">https://stackoverflow.com/a/41434590</a>
+This method is equivalent to OpenSSL's EVP_BytesToKey function
+(see <a href="https://github.com/openssl/openssl/blob/master/crypto/evp/evp_key.c">https://github.com/openssl/openssl/blob/master/crypto/evp/evp_key.c</a>).
+By default, OpenSSL uses a single iteration, MD5 as the algorithm and UTF-8 encoded password data.</p>
+<ul>
+<li>keyLength the length of the generated key (in bytes)</li>
+<li>ivLength the length of the generated IV (in bytes)</li>
+<li>iterations the number of digestion rounds</li>
+<li>salt the salt data (8 bytes of data or <code>null</code>)</li>
+<li>password the password data (optional)</li>
+<li>md the message digest algorithm to use</li>
+</ul>
+<p>returns an two-element array with the generated key and IV</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">EvpKDFResult EvpKDF({
+  required dynamic password,
+  required Uint8List salt,
+  int keySize = 4,
+  int ivSize = 0,
+  int iterations = 1,
+  String hasher = &#39;MD5&#39;,
+}) {
+  final _password = password is! Uint8List ? UTF8().parse(password) : password;
+
+  Digest digest = Digest(hasher);
+
+  final digestLength = digest.digestSize;
+  final int requiredLength =
+      (keySize + ivSize + digestLength - 1) ~&#47; digestLength * digestLength;
+  final generatedData = Uint8List(requiredLength);
+  var generatedLength = 0;
+
+  digest.reset();
+
+  &#47;&#47; Repeat process until sufficient data has been generated
+  while (generatedLength &lt; keySize + ivSize) {
+    &#47;&#47; Digest data (last digest if available, password data, salt if available)
+    if (generatedLength &gt; 0) {
+      digest.update(
+          generatedData, generatedLength - digestLength, digestLength);
+    }
+    digest.update(_password, 0, _password.length);
+    digest.update(salt, 0, salt.length);
+    digest.doFinal(generatedData, generatedLength);
+
+    &#47;&#47; additional rounds
+    for (var i = 1; i &lt; iterations; i++) {
+      digest.update(generatedData, 0, generatedData.length);
+      digest.doFinal(generatedData, generatedLength);
+    }
+    generatedLength += digestLength;
+  }
+
+  return EvpKDFResult(
+    Uint8List.sublistView(generatedData, 0, keySize),
+    ivSize &gt; 0
+        ? Uint8List.sublistView(generatedData, keySize, keySize + ivSize)
+        : Uint8List(0),
+  );
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../index.html">crypto_dart</a></li>
+    <li><a href="../evpkdf/evpkdf-library.html">evpkdf</a></li>
+    <li class="self-crumb">EvpKDF function</li>
+</ol>
+
+
+    <h5>evpkdf library</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-left-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    crypto_dart
+      1.0.2
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+

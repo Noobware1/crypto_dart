@@ -1,7 +1,7 @@
-// ignore_for_file: non_constant_identifier_names
-
 import 'dart:typed_data';
 
+import 'package:crypto_dart/crypto_dart.dart';
+import 'package:crypto_dart/evpkdf.dart';
 import 'package:crypto_dart/src/hash_algorithms.dart';
 import 'package:crypto_dart/src/hashers/hasher.dart';
 
@@ -24,8 +24,9 @@ import 'block_ciphers/tripledes.dart' as tripledes;
 import 'encoders.dart';
 import 'evpkdf.dart' as key_and_iv_gen;
 import 'pbkdf2.dart' as pbkdf2;
+import 'utils.dart' as utils;
 
-class CryptoDart {
+sealed class CryptoDart {
   static Encoders enc = Encoders();
 
   static aes.AES AES = aes.AES();
@@ -59,35 +60,37 @@ class CryptoDart {
   static Uint8List PBKDF2({
     String hasher = HashAlgorithms.SHA256,
     int iterations = 250000,
-    required int blockLength,
     int keySize = 4,
     required Uint8List salt,
-    String keyEncoding = 'utf8',
-    required String key,
+    required dynamic password,
+    int? blockLength,
   }) {
     return pbkdf2.PBKDF2(
-        iterations: iterations,
-        salt: salt,
-        key: key,
-        hasher: hasher,
-        keyEncoding: keyEncoding,
-        blockLength: blockLength,
-        keySize: keySize);
+      iterations: iterations,
+      salt: salt,
+      password: password,
+      hasher: hasher,
+      blockLength: blockLength,
+      keySize: keySize,
+    );
   }
 
-  static List<Uint8List> EvpKDF({
-    required Uint8List password,
-    required int keySize,
-    required int ivSize,
+  static EvpKDFResult EvpKDF({
+    required dynamic password,
     required Uint8List salt,
-    required int iterations,
-    required String hasher,
+    int keySize = 4,
+    int ivSize = 0,
+    int iterations = 1,
+    String hasher = 'MD5',
   }) =>
       key_and_iv_gen.EvpKDF(
-          password: password,
-          keySize: keySize,
-          ivSize: ivSize,
-          salt: salt,
-          iterations: iterations,
-          hasher: hasher);
+        password: password,
+        keySize: keySize,
+        ivSize: ivSize,
+        salt: salt,
+        iterations: iterations,
+        hasher: hasher,
+      );
+
+  static Uint8List randomUint8List(int nBytes) => utils.randomUint8List(nBytes);
 }

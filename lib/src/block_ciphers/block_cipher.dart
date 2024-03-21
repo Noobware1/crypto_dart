@@ -1,10 +1,6 @@
-/// The `block_cipher.dart` file contains the definition of an abstract class `BlockCipher`.
-/// This class provides a blueprint for block cipher encryption and decryption operations.
-
 import 'dart:typed_data';
 import 'package:crypto_dart/crypto_dart.dart';
 
-/// `BlockCipher` is an abstract class that defines two methods: `encrypt` and `decrypt`.
 abstract class BlockCipher {
   /// The `encrypt` method takes in plain text, a key, and optionally an initialization vector (iv) and cipher options.
   /// It returns a `CipherParams` object which contains the encrypted data.
@@ -18,6 +14,7 @@ abstract class BlockCipher {
   Uint8List decrypt<Text, Key>(Text? ciphertext, Key? key,
       {CipherOptions? options});
 
+  /// The `areParamsVaild` method is a helper method that checks if the parameters passed to the `encrypt` and `decrypt` methods are valid.
   void areParamsVaild<A, B, C>(C? cipherText, A? key,
       {CipherOptions? options}) {
     assert(cipherText != null && key != null);

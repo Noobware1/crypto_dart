@@ -1,3 +1,6 @@
+import 'dart:math';
+import 'dart:typed_data';
+
 import 'enc.dart';
 import 'encoders/base64.dart';
 import 'encoders/hex.dart';
@@ -17,4 +20,21 @@ Encoder getEncoder(String encoding) {
     default:
       throw ArgumentError('UnKnown Encoding $encoding');
   }
+}
+
+Uint8List randomUint8List(int nBytes) {
+  final words = <int>[];
+
+  for (var i = 0; i < nBytes; i += 4) {
+    words.add(cryptoSecureRandomInt());
+  }
+  print(words);
+
+  return Uint8List.fromList(words);
+}
+
+/// Cryptographically secure pseudorandom number generator
+int cryptoSecureRandomInt() {
+  Random random = Random.secure();
+  return random.nextInt(pow(2, 32).toInt());
 }

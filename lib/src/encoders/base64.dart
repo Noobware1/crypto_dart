@@ -1,4 +1,4 @@
-import 'dart:convert' show base64Encode, base64Decode;
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:crypto_dart/src/enc.dart';

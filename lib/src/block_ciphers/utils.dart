@@ -13,18 +13,11 @@ import 'package:pointycastle/export.dart' as pointycastle;
 extension BlockCipherUtils on BlockCipher {
   Encoders get enc => CryptoDart.enc;
 
-  static const KEY_SIZE = 24; // 256 bits
-  static const IV_SIZE = 16; // 128 bits
-  static const SALT_SIZE = 8; // 64
-  static const KDF_DIGEST = 'MD5';
-
-  static const String APPEND = "Salted__";
-
-  Uint8List getSalt<T>(T salt) {
+  Uint8List getSalt<T>(T salt, int length) {
     Uint8List checkLen(Uint8List bytes) {
-      if (bytes.length < SALT_SIZE) {
+      if (bytes.length < length) {
         return Uint8List.fromList(
-            [...bytes, ..._generateSalt(SALT_SIZE - bytes.length)]);
+            [...bytes, ...generateSalt(length - bytes.length)]);
       }
       return bytes;
     }
@@ -38,7 +31,7 @@ extension BlockCipherUtils on BlockCipher {
     }
   }
 
-  Uint8List _generateSalt(int length) {
+  Uint8List generateSalt(int length) {
     final random = Random.secure();
 
     final salt = <int>[];
@@ -73,7 +66,7 @@ extension BlockCipherUtils on BlockCipher {
     }
   }
 
-  Uint8List getIV<T>(T? iv, [String? encoding]) {
+  Uint8List getIV<T>(T? iv, int length, [String? encoding]) {
     if (iv == null) return Uint8List(16);
     if (iv is String && encoding != null) {
       return getEncoder(encoding).parse(iv);
@@ -83,21 +76,21 @@ extension BlockCipherUtils on BlockCipher {
     if (iv is List<int>) {
       $iv = Uint8List.fromList(iv);
     } else if (iv is String) {
-      $iv = enc.UTF8.parse(iv);
+      $iv = enc.Utf8.parse(iv);
     } else if (iv is Uint8List) {
       $iv = iv;
     } else {
       throw invailedParams(iv);
     }
     if ($iv.length < 16) {
-      return generateIV($iv);
+      return generateIV($iv, length);
     }
     return $iv;
   }
 
-  Uint8List generateIV(Uint8List bytes) {
+  Uint8List generateIV(Uint8List bytes, int length) {
     final iv = [...bytes];
-    for (var i = iv.length; i < IV_SIZE; i++) {
+    for (var i = iv.length; i < length; i++) {
       iv.add(0);
     }
     return Uint8List.fromList(iv);
@@ -105,7 +98,7 @@ extension BlockCipherUtils on BlockCipher {
 
   Uint8List getPlaintText<T>(T plainText, [Encoder? encoding]) {
     if (plainText is String) {
-      return encoding?.parse(plainText) ?? _decodeString(plainText, 'base64');
+      return encoding?.parse(plainText) ?? decodeString(plainText, 'base64');
     } else if (plainText is List<int>) {
       return Uint8List.fromList(plainText);
     } else if (plainText is Uint8List) {
@@ -119,20 +112,20 @@ extension BlockCipherUtils on BlockCipher {
       return Uint8List.fromList(cipherText);
     } else if (cipherText is Uint8List) {
       return cipherText;
-    } else if (cipherText is String && encoding != null) {
-      return getEncoder(encoding).parse(cipherText);
+    } else if (cipherText is String) {
+      return getEncoder(encoding ?? 'base64').parse(cipherText);
     } else {
       throw invailedParams(cipherText);
     }
   }
 
-  Uint8List _decodeString(String str, String encoding) {
+  Uint8List decodeString(String str, String encoding) {
     try {
       switch (encoding) {
         case 'base64':
-          return enc.BASE64.parse(str);
+          return enc.Base64.parse(str);
         case 'hex':
-          return enc.HEX.parse(str);
+          return enc.Hex.parse(str);
         default:
           throw ArgumentError.value(encoding, 'encoding', 'Invalid encoding');
       }

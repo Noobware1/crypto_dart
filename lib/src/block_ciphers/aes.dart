@@ -13,6 +13,13 @@ import 'package:crypto_dart/src/crypto_dart.dart';
 import 'package:crypto_dart/src/mode.dart';
 
 class AES extends block_cipher.BlockCipher {
+  static const _KEY_SIZE = 24; // 256 bits
+  static const _IV_SIZE = 16; // 128 bits
+  static const _SALT_SIZE = 8; // 64
+  static const _KDF_DIGEST = 'MD5';
+
+  static const String _APPEND = "Salted__";
+
   @override
   CipherParams encrypt<Text, Key>(Text? plainText, Key? key,
       {CipherOptions? options}) {
@@ -22,7 +29,7 @@ class AES extends block_cipher.BlockCipher {
 
     final Uint8List encrypted;
 
-    final Uint8List ctbytes = getPlaintText(plainText, enc.UTF8);
+    final Uint8List ctbytes = getPlaintText(plainText, enc.Utf8);
 
     final Uint8List _key;
     final Uint8List _iv;
@@ -32,18 +39,18 @@ class AES extends block_cipher.BlockCipher {
     final padding = getPadding(paddingUsed);
     final Uint8List? salt;
     if (key is String && options?.keyEncoding == null) {
-      salt = getSalt(options?.salt ?? _generateSalt(SALT_SIZE));
+      salt = getSalt(options?.salt ?? generateSalt(_SALT_SIZE), _SALT_SIZE);
       final keyAndIV = CryptoDart.EvpKDF(
-        password: enc.UTF8.parse(key),
-        keySize: KEY_SIZE,
-        ivSize: IV_SIZE,
+        password: enc.Utf8.parse(key),
+        keySize: _KEY_SIZE,
+        ivSize: _IV_SIZE,
         salt: salt,
-        hasher: KDF_DIGEST,
+        hasher: _KDF_DIGEST,
         iterations: 1,
       );
 
-      _key = keyAndIV[0];
-      _iv = keyAndIV[1];
+      _key = keyAndIV.key;
+      _iv = keyAndIV.iv;
 
       final cipherText = _runAes(
           forEncryption: true,
@@ -53,18 +60,18 @@ class AES extends block_cipher.BlockCipher {
           mode: mode,
           padding: padding);
 
-      var sbytes = enc.UTF8.parse(APPEND);
-      var b = Uint8List(IV_SIZE + cipherText.length);
+      var sbytes = enc.Utf8.parse(_APPEND);
+      var b = Uint8List(_IV_SIZE + cipherText.length);
 
       arrayCopy(sbytes, 0, b, 0, sbytes.length);
-      arrayCopy(salt, 0, b, SALT_SIZE, SALT_SIZE);
+      arrayCopy(salt, 0, b, _SALT_SIZE, _SALT_SIZE);
       arrayCopy(cipherText, 0, b, 16, cipherText.length);
 
       encrypted = b;
     } else {
       _key = getKey(key, options?.keyEncoding);
 
-      _iv = getIV(options?.iv, options?.ivEncoding);
+      _iv = getIV(options?.iv, _IV_SIZE, options?.ivEncoding);
       salt = null;
       encrypted = _runAes(
           forEncryption: true,
@@ -104,25 +111,25 @@ class AES extends block_cipher.BlockCipher {
         saltbytes =
             getEncoder(options.saltEncoding ?? 'hex').parse(options.salt);
       } else {
-        saltbytes = getSalt(options.salt);
+        saltbytes = getSalt(options.salt, _SALT_SIZE);
       }
     }
 
     if (key is String && options?.keyEncoding == null) {
-      var ctBytes = enc.BASE64.parse(ciphertext as String);
+      var ctBytes = enc.Base64.parse(ciphertext as String);
       final cipherTextBytes =
-          saltbytes == null ? ctBytes.sublist(IV_SIZE) : ctBytes;
-      saltbytes ??= ctBytes.sublist(SALT_SIZE, IV_SIZE);
+          saltbytes == null ? ctBytes.sublist(_IV_SIZE) : ctBytes;
+      saltbytes ??= ctBytes.sublist(_SALT_SIZE, _IV_SIZE);
       final keyAndIV = CryptoDart.EvpKDF(
-        password: enc.UTF8.parse(key),
-        keySize: KEY_SIZE,
-        ivSize: IV_SIZE,
-        hasher: KDF_DIGEST,
+        password: enc.Utf8.parse(key),
+        keySize: _KEY_SIZE,
+        ivSize: _IV_SIZE,
+        hasher: _KDF_DIGEST,
         salt: saltbytes,
         iterations: 1,
       );
-      _key = keyAndIV[0];
-      _iv = keyAndIV[1];
+      _key = keyAndIV.key;
+      _iv = keyAndIV.iv;
       decrypted = _runAes(
           key: _key,
           iv: _iv,
@@ -131,7 +138,7 @@ class AES extends block_cipher.BlockCipher {
           forEncryption: false,
           padding: padding);
     } else {
-      _iv = getIV(options?.iv, options?.ivEncoding);
+      _iv = getIV(options?.iv, _IV_SIZE, options?.ivEncoding);
       _key = getKey(key, options?.keyEncoding);
       saltbytes = null;
       decrypted = _runAes(
