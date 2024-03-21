@@ -92,7 +92,6 @@ The method is generic and can work with any type of data for the plain text, key
 CipherParams encrypt&lt;Text, Key&gt;(Text? plainText, Key? key,
     {CipherOptions? options}) {
   assert(plainText != null &amp;&amp; key != null);
-
   areParamsVaild(plainText, key, options: options);
 
   final Uint8List encrypted;
@@ -192,7 +191,7 @@ CipherParams encrypt&lt;Text, Key&gt;(Text? plainText, Key? key,
 <footer>
   <span class="no-break">
     crypto_dart
-      1.0.2
+      1.0.3+2
   </span>
 
   

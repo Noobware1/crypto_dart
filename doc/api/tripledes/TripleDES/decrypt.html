@@ -112,7 +112,9 @@ Uint8List decrypt&lt;Text, Key&gt;(Text? ciphertext, Key? key,
   }
 
   if (key is String &amp;&amp; options?.keyEncoding == null) {
-    var ctBytes = enc.Base64.parse(ciphertext as String);
+    var ctBytes = ciphertext is CipherParams
+        ? ciphertext.cipherText
+        : enc.Base64.parse(ciphertext as String);
     final cipherTextBytes =
         saltbytes == null ? ctBytes.sublist(_IV_SIZE) : ctBytes;
     saltbytes ??= ctBytes.sublist(_SALT_SIZE, _IV_SIZE);
@@ -182,7 +184,7 @@ Uint8List decrypt&lt;Text, Key&gt;(Text? ciphertext, Key? key,
 <footer>
   <span class="no-break">
     crypto_dart
-      1.0.2
+      1.0.3+2
   </span>
 
   

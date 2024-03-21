@@ -17,5 +17,11 @@
 - remove areParamsVaild from BlocCipher
 - make BlockCipher decrypt method accept CipherParams as input
 
+## 1.0.3+2
+
+- I am so dumb
+- forgot to put repo link in README.md
+- also forgot to run dart doc after making so many changes
+
 
 

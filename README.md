@@ -37,7 +37,7 @@ void main() {
 }
 ```
 ## Contributing:
-Contributions to this package are welcome! If you find any bugs, want to request a new feature, or want to contribute code, feel free to open an issue or submit a pull request on the GitHub repository: [link to GitHub repo].
+Contributions to this package are welcome! If you find any bugs, want to request a new feature, or want to contribute code, feel free to open an issue or submit a pull request on the GitHub repository: [https://github.com/Noobware1/crypto_dart].
 
 ## License:
 This package is distributed under the MIT License. See the LICENSE file for more information.
